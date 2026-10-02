@@ -1,0 +1,104 @@
+{
+  "metadata": {
+    "generated_at": "2026-08-27T12:00:00.000000Z"
+  },
+  "macros": {
+    "macro.acme.gp": {
+      "unique_id": "macro.acme.gp",
+      "name": "gp",
+      "package_name": "acme",
+      "path": "macros/metrics/GMP/gp.sql",
+      "original_file_path": "macros/metrics/GMP/gp.sql",
+      "description": "### GP\n\nВаловая прибыль.\n**GP = [GMV](#!/macro/macro.acme.gmv)  - [Dep_fee](#!/macro/macro.acme.dep_fee) - [WD_fee](#!/macro/macro.acme.wd_fee) - [Settlement_fee](#!/macro/macro.acme.settlement_fee) - [Loyalty_cashback](#!/macro/macro.acme.banus_cashback)**\n\n### Методология и особенности\n\nПоказатель в разрезе основных измерений рассчитан в витрине [acme_marts.product_datamart_daily](#!/model/model.acme.acme_marts_product_datamart_daily).\n\n\n### Дашборды\n\nМетрика представлена в следующих дашбордах:\n\n| Name\t| Link\t| Description\t|\n| ---\t| ---\t| ---\t\t\t|\n| All_Metrics | [Dashboard](https://bi.example.com/sense/app/56e40043-3b24-4ff8-b0ea-9ce50fb22196/overview)| Для верхнеуровневого просмотра|\n| Marketing | [Dashboard](https://bi.example.com/sense/app/b354719b-3210-482a-a27a-1dd46b4c3943/overview)| Для просмотра по маркетинговым срезам|\n\n### Скрипты расчета показателя\n\n```sql\nselect\n\tsum(pdd.gp) as gp\nfrom acme_marts.product_datamart_daily pdd\nleft join acme_marts.users u on pdd.user_id = u.id\nwhere pdd.date = '{date}'\nand ifnull(u.is_our_company, 0) = 0\n```",
+      "macro_sql": "{% macro gp() -%}\n\n{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.gmp": {
+      "unique_id": "macro.acme.gmp",
+      "name": "gmp",
+      "package_name": "acme",
+      "path": "macros/metrics/GMP/gmp.sql",
+      "original_file_path": "macros/metrics/GMP/gmp.sql",
+      "description": "### GMP\n\nВаловая маркетинговая прибыль.\n**GMP = [GP](#!/macro/macro.acme.gp)  - [Spend](#!/macro/macro.acme.spend)**\n\n### Дашборды\nМетрика представлена в следующих дашбордах:\n\n| Name\t| Link\t| Description\t|\n| ---\t| ---\t| ---\t\t\t|\n| All_Metrics | [Dashboard](https://bi.example.com/sense/app/56e40043-3b24-4ff8-b0ea-9ce50fb22196/overview)| Для верхнеуровневого просмотра|\n| Marketing | [Dashboard](https://bi.example.com/sense/app/b354719b-3210-482a-a27a-1dd46b4c3943/overview)| Для просмотра по маркетинговым срезам|",
+      "macro_sql": "{% macro gmp() -%}\n\n{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.spend": {
+      "unique_id": "macro.acme.spend",
+      "name": "spend",
+      "package_name": "acme",
+      "path": "macros/metrics/Marketing/spend.sql",
+      "original_file_path": "macros/metrics/Marketing/spend.sql",
+      "description": "### Spend\n\nСырая (нераспределенная) сумма всех затрат на привлечение пользователей. Другое название метрики Spend_raw.\n\n### Методология и особенности\nПолучаем как аддитивную метрику из рекламных сеток.\n\n### Дашборды\nМетрика представлена в следующих дашбордах:\n\n| Name\t| Link\t| Description\t|\n| ---\t| ---\t| ---\t\t\t|\n| All_Metrics | [Dashboard](https://bi.example.com/sense/app/56e40043-3b24-4ff8-b0ea-9ce50fb22196/overview)| Для верхнеуровневого просмотра|\n| Marketing | [Dashboard](https://bi.example.com/sense/app/b354719b-3210-482a-a27a-1dd46b4c3943/overview)| Для просмотра по маркетинговым срезам|\n\n### Скрипт расчета показателя\n```sql\nSELECT s.spend_date::DATE       AS date,\n       SUM(ZEROIFNULL(s.spend)) AS spend\nFROM acme_marts.spends_union AS s\nWHERE s.spend_date::DATE BETWEEN '$(vDateFrom)' AND '$(vDateTo)'\nGROUP BY 1\n```",
+      "macro_sql": "{% macro spend() -%}\n\n{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.turnover_fx": {
+      "unique_id": "macro.acme.turnover_fx",
+      "name": "turnover_fx",
+      "package_name": "acme",
+      "path": "macros/metrics/Turnover/turnover_fx.sql",
+      "original_file_path": "macros/metrics/Turnover/turnover_fx.sql",
+      "description": "### TO_fx\n\nОбъем всех FX сделок. \n\n### Методология и особенности\n\nОбъем по FX сделкам рассчитывается в двух вариантах:\n- **TO_fx** - объем всех FX сделок без учета мультипликтора\n- **TO_fx_mltp** - объем всех FX сделок с учетом мультипликатора. DEPRECATED! floating метрики будут удалены до конца 2026-03\n\n**TO_fx = TO_rlz_fx + TO_flt_fx**, где\n- `TO_rlz_fx` - объем всех завершенных FX сделок без учета мультипликатора\n- `TO_flt_fx` - объем всех открытых FX сделок без учета мультипликатора. DEPRECATED! floating метрики будут удалены до конца 2026-03\n\n**TO_fx_mltp = TO_rlz_fx_mltp + TO_flt_fx_mltp**, где\n- `TO_rlz_fx_mltp` - объем всех завершенных FX сделок с учетом мультипликатора\n- `TO_flt_fx_mltp` - объем всех открытых FX сделок с учетом мультипликатора. DEPRECATED! floating метрики будут удалены до конца 2026-03\n\nПоказатели в разрезе основных измерений рассчитаны в витрине [acme_marts.product_datamart_daily](#!/model/model.acme.acme_marts_product_datamart_daily).\n\n### Дашборды\n\nМетрика представлена в следующих дашбордах:\n\n| Name\t| Link\t| Description\t|\n| ---\t| ---\t| ---\t\t\t|\n| All_Metrics | [Dashboard](https://bi.example.com/sense/app/56e40043-3b24-4ff8-b0ea-9ce50fb22196/overview)| Для верхнеуровневого просмотра|\n\n### Скрипты расчета показателей\n```sql\n-- на данных продуктовой витрины\nselect\n\tsum(pdd.fx_to) \tas to_fx_mltp,\n\tsum(pdd.fx_to_rlz) as to_rlz_fx_mltp,\n\tsum(pdd.fx_to_flt) as to_flt_fx_mltp,\n\tsum(pdd.fx_to_rlz_no_mltp) as to_rzl_fx,\n\tsum(pdd.fx_to_flt_no_mltp) as to_flt_fx\nfrom acme_marts.product_datamart_daily pdd\nleft join acme_marts.users u on pdd.user_id = u.id\nwhere pdd.date = '{date}'\nand ifnull(u.is_our_company, 0) = 0\n```",
+      "macro_sql": "{% macro turnover_fx() -%}\n\n{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.orphan_metric": {
+      "unique_id": "macro.acme.orphan_metric",
+      "name": "orphan_metric",
+      "path": "macros/metrics/Other/orphan_metric.sql",
+      "original_file_path": "macros/metrics/Other/orphan_metric.sql",
+      "description": "### Orphan\nShould not be indexed when exposure core set is present.",
+      "macro_sql": "{% macro orphan_metric() -%}{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.get_dim_nrfm_group": {
+      "unique_id": "macro.acme.get_dim_nrfm_group",
+      "name": "get_dim_nrfm_group",
+      "package_name": "acme",
+      "path": "macros/dimensions/get_dim_nrfm_group.sql",
+      "original_file_path": "macros/dimensions/get_dim_nrfm_group.sql",
+      "description": "## nrfm_group\n\nnRFM-сегмент пользователя\n\n### Алгоритм\nВ витринах nRFM используется объединение сегментации активной и неактивной аудитории.\n\n```sql\nselect nrfm_group from acme_marts.users_nrfm_union_daily_codes\n```",
+      "macro_sql": "{% macro get_dim_nrfm_group() -%}{%- endmacro %}",
+      "resource_type": "macro"
+    },
+    "macro.acme.get_helper_app_ids": {
+      "unique_id": "macro.acme.get_helper_app_ids",
+      "name": "get_helper_app_ids",
+      "path": "macros/dimensions/get_dim_app_id.sql",
+      "original_file_path": "macros/dimensions/get_dim_app_id.sql",
+      "description": "Helper list — must not appear as a dimension card without exposure row.",
+      "macro_sql": "{% macro get_helper_app_ids() -%}{%- endmacro %}",
+      "resource_type": "macro"
+    }
+  },
+  "exposures": {
+    "exposure.acme.analytics_metrics_core": {
+      "unique_id": "exposure.acme.analytics_metrics_core",
+      "name": "analytics_metrics_core",
+      "resource_type": "exposure",
+      "description": "## Core metrics\n| metric | formula |\n| GP | [formula](#!/macro/macro.acme.gp) |\n| GMP | [formula](#!/macro/macro.acme.gmp) |\n| Spend | [formula](#!/macro/macro.acme.spend) |\n| TO_fx | [formula](#!/macro/macro.acme.turnover_fx) |\n",
+      "depends_on": {
+        "macros": [
+          "macro.acme.gp",
+          "macro.acme.gmp",
+          "macro.acme.spend",
+          "macro.acme.turnover_fx"
+        ],
+        "nodes": []
+      }
+    },
+    "exposure.acme.analytics_dimensions": {
+      "unique_id": "exposure.acme.analytics_dimensions",
+      "name": "analytics_dimensions",
+      "resource_type": "exposure",
+      "description": "## Основные измерения\n\n| dimension | description | detailed description |\n| -----     | ----        | ----                 |\n|**channel**|Канал регистрации пользователя|[detailed description](#!/model/model.acme.dict_channel)|\n|**nrfm_group**|nRFM-сегмент пользователя|[detailed description](#!/macro/macro.acme.get_dim_nrfm_group)|\n|**country**|Страна регистрации пользователя||\n",
+      "depends_on": {
+        "macros": [],
+        "nodes": []
+      }
+    }
+  },
+  "docs": {},
+  "nodes": {}
+}

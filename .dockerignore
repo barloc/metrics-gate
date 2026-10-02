@@ -1,0 +1,6 @@
+.git
+build
+vendor
+.env
+*.md
+!README.md

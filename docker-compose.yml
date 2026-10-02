@@ -1,0 +1,11 @@
+services:
+  metrics-gate:
+    build: .
+    ports:
+      - "8080:8080"
+      - "8090:8090"
+    volumes:
+      - ./app/index/testdata/manifest.mini.json:/data/manifest.json:ro
+      - ./overlay.example.yaml:/data/overlay.yaml:ro
+      - ./config.compose.yaml:/app/config.yaml:ro
+    command: ["--config", "/app/config.yaml"]

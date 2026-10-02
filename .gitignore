@@ -1,0 +1,13 @@
+.idea
+.vscode
+.env
+*.pid
+*.log
+graph.dot
+coverage.out
+/bin
+.tools/
+/metrics-gate
+build/
+vendor/
+.publish-github/

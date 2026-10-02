@@ -1,0 +1,30 @@
+server:
+  http:
+    system:
+      port: 8090
+      host: ""
+    api:
+      port: 8080
+      host: ""
+
+product: example
+
+docs_sql_dialect: vertica
+apply_warehouse: starrocks
+
+index:
+  file: "/data/manifest.json"
+  refresh_interval: 5m
+
+overlay:
+  file: "/data/overlay.yaml"
+
+search:
+  max_hits: 20
+
+auth:
+  mode: disabled
+
+logger:
+  level: info
+  format: text

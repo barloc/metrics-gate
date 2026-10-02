@@ -1,0 +1,45 @@
+server:
+  http:
+    system:
+      port: 8090
+      host: ""
+    api:
+      port: 8080
+      host: ""
+
+product: example
+
+docs_sql_dialect: vertica
+apply_warehouse: starrocks
+
+index:
+  # Prefer a file for local smoke, or any HTTP URL to a raw manifest.json
+  file: "app/index/testdata/manifest.mini.json"
+  # url: "https://docs.example.com/manifest.json"
+  refresh_interval: 5m
+
+overlay:
+  file: overlay.example.yaml
+
+# Optional overrides (defaults shown):
+# catalog:
+#   metrics_macro_prefix: "macros/metrics/"
+#   dimensions_macro_prefix: "macros/dimensions/"
+#   metrics_exposure: analytics_metrics_core
+#   dimensions_exposure: analytics_dimensions
+
+search:
+  max_hits: 20
+
+auth:
+  mode: disabled
+  # mode: static
+  # static:
+  #   sub: local
+  #   email: local@metrics-gate
+  #   name: local
+  #   groups: [analysts]
+
+logger:
+  level: info
+  format: text

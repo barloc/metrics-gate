@@ -1,0 +1,13 @@
+metrics:
+  - id: turnover_fx
+    apply_column: fx_to
+    aliases: [to_fx, TO_fx, fx_to]
+  - id: gp
+    apply_column: gp
+    aliases: [GP]
+  - id: gmp
+    apply_column: gmp
+    aliases: [GMP]
+  - id: spend
+    apply_column: spend
+    aliases: [Spend]

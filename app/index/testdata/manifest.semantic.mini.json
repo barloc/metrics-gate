@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "generated_at": "2026-09-21T12:00:00.000000Z"
+  },
+  "macros": {},
+  "metrics": {
+    "metric.demo.volume": {
+      "unique_id": "metric.demo.volume",
+      "name": "volume",
+      "label": "Volume",
+      "package_name": "demo",
+      "path": "models/dds/product/metrics_trading.yml",
+      "original_file_path": "models/dds/product/metrics_trading.yml",
+      "description": "Номинальный объём торговли в USD — маржа, умноженная на плечо.\n\n```sql\nselect sum(t.volume_usd) as volume\nfrom lake.demo_dds.product_fx_trades t\n```",
+      "resource_type": "metric",
+      "type": "simple",
+      "meta": {
+        "short_name": "Volume",
+        "unit": "USD",
+        "formula": "amount × leverage",
+        "pitfalls": [
+          "не путать с amount"
+        ]
+      }
+    },
+    "metric.demo.pnl": {
+      "unique_id": "metric.demo.pnl",
+      "name": "pnl",
+      "label": "PnL",
+      "path": "models/dds/product/metrics_trading.yml",
+      "description": "Прибыль и убыток в сторону компании.",
+      "resource_type": "metric",
+      "meta": {
+        "unit": "USD",
+        "formula": "sum(pnl)"
+      }
+    },
+    "metric.demo.orphan_metric": {
+      "unique_id": "metric.demo.orphan_metric",
+      "name": "orphan_metric",
+      "label": "Orphan",
+      "path": "models/other.yml",
+      "description": "Must not be indexed without exposure ref.",
+      "resource_type": "metric",
+      "meta": {}
+    }
+  },
+  "exposures": {
+    "exposure.demo.analytics_metrics_core": {
+      "unique_id": "exposure.demo.analytics_metrics_core",
+      "name": "analytics_metrics_core",
+      "resource_type": "exposure",
+      "description": "## Metrics registry",
+      "depends_on": {
+        "macros": [],
+        "nodes": [
+          "metric.demo.volume",
+          "metric.demo.pnl"
+        ]
+      }
+    },
+    "exposure.demo.analytics_dimensions": {
+      "unique_id": "exposure.demo.analytics_dimensions",
+      "name": "analytics_dimensions",
+      "resource_type": "exposure",
+      "description": "## Разрезы\n\n### Время\n\n| разрез | значения | описание | источник |\n| --- | --- | --- | --- |\n|**dt**|—|Дата строки витрины — в каждом источнике своя.|[deposit_dashboard](#!/model/model.demo.deposit_dashboard)|\n|**deal_type**|`product_a`, `product_b`|В каком продукте открыта сделка.|[product_fx_trades](#!/model/model.demo.product_fx_trades)|\n",
+      "depends_on": {
+        "macros": [],
+        "nodes": []
+      }
+    }
+  }
+}
