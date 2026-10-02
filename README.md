@@ -72,7 +72,7 @@ index:
 overlay:
   file: overlay.example.yaml
 
-catalog:                          # optional; defaults shown
+catalog:                          # optional; defaults shown — also documented under Authoring
   metrics_macro_prefix: "macros/metrics/"
   dimensions_macro_prefix: "macros/dimensions/"
   metrics_exposure: analytics_metrics_core
@@ -96,8 +96,6 @@ Gate reads only `manifest.json`. The catalog is built from **named exposures** p
 | `analytics_dimensions` | Dimension catalog = markdown table in `description` |
 
 Without `analytics_metrics_core`, semantic metrics are **not** loaded; macros under `macros/metrics/` load all. Without `analytics_dimensions`, there are no dimensions (dimension macros alone do not create the catalog).
-
-Override names/prefixes via the `catalog` config block if your repo uses different conventions.
 
 ### Variant A — macro-docs (stub macros)
 
@@ -154,7 +152,7 @@ Two layouts (auto-detected from header):
 | Layout | Header cues | Short text |
 | --- | --- | --- |
 | short-desc (3 col) | `dimension` / `description` | col2 (or link in col3) |
-| values-desc (4 col) | `values`+`description` or localized equivalents | col3 (description), col2 = values |
+| values-desc (4 col) | `values`+`description`, or `разрез` / `значен*` | col3 (description), col2 = values |
 
 Optional methodology enrichment (does not create ids by itself):
 
@@ -167,9 +165,28 @@ Optional methodology enrichment (does not create ids by itself):
 | **channel** | Acquisition channel | [docs](#!/macro/macro.my_project.get_dim_channel) |
 ```
 
-### Outside dbt: overlay YAML
+or:
 
-Aliases (“how users ask”) and warehouse `apply_column` live in the gate overlay file, not in the manifest. Only for metric ids that already exist.
+```markdown
+| dimension | values | description | source |
+| --- | --- | --- | --- |
+| **dt** | — | Row date in the mart | [mart](#!/model/...) |
+```
+
+### Outside dbt: overlay + catalog config
+
+- **Overlay YAML** (`overlay.file`) — aliases (“how users ask”) and warehouse `apply_column` for metric ids that already exist in the manifest. See [`overlay.example.yaml`](overlay.example.yaml).
+- **`catalog` block** — override macro path prefixes and exposure names when the dbt repo does not use the defaults (`macros/metrics/`, `macros/dimensions/`, `analytics_metrics_core`, `analytics_dimensions`). Same keys as in [Configuration](#configuration).
+
+### Not a source of truth
+
+metrics-gate does **not** use:
+
+- `catalog.json` (dbt docs catalog)
+- git HEAD / raw Jinja from the dbt repo
+- MetricFlow runtime or warehouse execution
+- Qlik-only measure texts
+- Dimension macros alone (without a row in the `analytics_dimensions` table)
 
 ## Docker Hub
 

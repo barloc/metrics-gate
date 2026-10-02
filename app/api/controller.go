@@ -58,11 +58,6 @@ func (c *Controller) Handler() http.Handler {
 	return r
 }
 
-// HandlerForTest is an alias of Handler for tests.
-func (c *Controller) HandlerForTest() http.Handler {
-	return c.Handler()
-}
-
 func (c *Controller) authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id, err := c.auth.FromRequest(r)

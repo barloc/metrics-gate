@@ -14,6 +14,8 @@ or applied — from a **metrics-gate** instance (local Docker/binary or a deploy
 
 Upstream project: [github.com/barloc/metrics-gate](https://github.com/barloc/metrics-gate).
 
+How to author metrics/dimensions in the dbt repo (macro-docs vs semantic, exposures, overlay): see the upstream [README authoring section](https://github.com/barloc/metrics-gate/blob/main/README.md#authoring-metrics--dimensions-in-dbt).
+
 ## Install (Cursor)
 
 1. Copy or symlink this directory into Cursor skills, e.g.:

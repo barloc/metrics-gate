@@ -1,11 +1,8 @@
 # Example overlay: aliases (how users ask) → metric id + warehouse apply_column.
 # Methodology texts come from the dbt manifest; this file only adds aliases/columns.
+# Ids below match the shipped fixture so `make smoke` works out of the box.
 
 metrics:
-  - id: revenue
-    apply_column: revenue
-    aliases: [Revenue, rev]
-
   - id: gp
     apply_column: gp
     aliases: [GP]
@@ -13,10 +10,6 @@ metrics:
   - id: gmp
     apply_column: gmp
     aliases: [GMP]
-
-  - id: spend
-    apply_column: spend
-    aliases: [Spend]
 
   - id: turnover_fx
     apply_column: fx_to

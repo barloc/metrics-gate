@@ -30,7 +30,7 @@ func testHandler(t *testing.T) http.Handler {
 	store := index.NewTestStore("example", ov)
 	require.NoError(t, store.LoadBytes(body, "sha1mini"))
 	svc := gate.NewService(store, slog.Default())
-	return api.NewController(svc, nil, slog.Default()).HandlerForTest()
+	return api.NewController(svc, nil, slog.Default()).Handler()
 }
 
 func postJSON(t *testing.T, h http.Handler, path string, payload map[string]any) *httptest.ResponseRecorder {

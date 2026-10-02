@@ -30,3 +30,4 @@ Example skill for Cursor: [`examples/skills/metrics-gate/SKILL.md`](examples/ski
 - Execute `example_sql` against the warehouse (`executable=false`)
 - Invent neighboring metrics when search misses
 - Treat this service as a SQL runner
+- Expect `catalog.json`, git Jinja, or MetricFlow runtime inside the gate

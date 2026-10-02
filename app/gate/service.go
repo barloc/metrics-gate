@@ -163,7 +163,7 @@ func (s *Service) GetMetric(_ context.Context, req GetMetricRequest) Envelope {
 		}
 		return s.fail("internal", err.Error())
 	}
-	return s.ok(metricCardData(card))
+	return s.ok(cardData(card))
 }
 
 // GetDimension handles POST /v1/get_dimension.
@@ -183,7 +183,7 @@ func (s *Service) GetDimension(_ context.Context, req GetDimensionRequest) Envel
 		}
 		return s.fail("internal", err.Error())
 	}
-	return s.ok(metricCardData(card))
+	return s.ok(cardData(card))
 }
 
 // ListMetrics handles POST /v1/list_metrics.
@@ -201,7 +201,7 @@ func (s *Service) ListMetrics(_ context.Context, req ListMetricsRequest) Envelop
 	return s.okPaging(map[string]any{"hits": hits, "count": len(hits)}, hasMore, next)
 }
 
-func metricCardData(card *index.MetricCard) map[string]any {
+func cardData(card *index.MetricCard) map[string]any {
 	rt := card.ResourceType
 	if rt == "" {
 		rt = index.ResourceMetric

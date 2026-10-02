@@ -155,7 +155,7 @@ func coreCatalogIDs(raw json.RawMessage, metricsExposure string) (macroIDs, metr
 		}
 	}
 	if len(macroIDs) == 0 {
-		macroIDs = nil // fallback: keep all Analytics macros
+		macroIDs = nil // fallback: keep all macros under metrics_macro_prefix
 	}
 	if len(metricIDs) == 0 {
 		metricIDs = nil // do not load semantic metrics without explicit refs
